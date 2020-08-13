@@ -16,7 +16,7 @@ World save parser for ARK: Survival Evolved servers, written specifically for my
 
 4. Click "Show Map" to view a map with approximate locations of each instance of a selected dino. Click on listings in the table to show their location on the map.
 
-# Rrandom info
+# Random info
 Cells containing baselevel info in the table are color-coded. These colors are also reflected on the map view.
 
 * \>90 - green
