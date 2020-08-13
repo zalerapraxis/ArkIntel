@@ -2,7 +2,6 @@
 
 # ArkIntel
 World save parser for ARK: Survival Evolved servers, written specifically for my personal server running Extinction Core.
-Code is nasty, I know.
 
 # Dependencies
 1. WinSCP - Downloads the world save file
