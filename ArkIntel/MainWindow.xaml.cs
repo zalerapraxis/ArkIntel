@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -16,6 +17,12 @@ namespace ArkIntel
     /// </summary>
     public partial class MainWindow
     {
+        public static string SavefileName = "Extinction.ark";
+        public static string ServerHostName = "";
+        public static string ServerUserName = "";
+        public static string ServerPassword = "";
+
+
         public static event EventHandler LstDinosSelectionChanged;
         public static event EventHandler DgDinoDataSelectionChanged;
         public FileInfo[] Files;
@@ -26,7 +33,6 @@ namespace ArkIntel
         public MainWindow()
         {
             InitializeComponent();
-            var wot = Dir.FullName;
             InitializeData();
         }
 
@@ -35,7 +41,7 @@ namespace ArkIntel
             RunArkTools();
             PopulateListbox();
             CountTotalDinos();
-            lbStatus.Content = "Worldfile last saved: " + File.GetLastWriteTime("Extinction.ark").ToString("MM/dd HH:mm:ss");
+            lbStatus.Content = "Worldfile last saved: " + File.GetLastWriteTime(SavefileName).ToString("MM/dd HH:mm:ss");
         }
 
         private void lstDinos_SelectionChanged(object sender, EventArgs e)
@@ -62,8 +68,12 @@ namespace ArkIntel
 
         private async void btnRefreshData_Click(object sender, RoutedEventArgs e)
         {
-            lbStatus.Content = "Connecting to FTP server...";
-            await Task.Run(() => DownloadNewData());
+            if ((bool) !chkDontRedownload.IsChecked)
+            {
+                lbStatus.Content = "Connecting to FTP server...";
+                await Task.Run(() => DownloadNewData());
+            }
+            
             lbStatus.Content = "Save data downloaded. Running Ark-Tools...";
             InitializeData();
         }
@@ -95,13 +105,21 @@ namespace ArkIntel
                 file.Delete();
             }
 
+            StringBuilder arktoolsArguments = new StringBuilder();
+            arktoolsArguments.Append("-jar ark-tools.jar ");
+            if ((bool) chkbxGetTamed.IsChecked)
+                arktoolsArguments.Append("tamed ");
+            else
+                arktoolsArguments.Append("wild ");
+            arktoolsArguments.Append($"{SavefileName} output");
+
             System.Diagnostics.Process arktools = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo =
                 new System.Diagnostics.ProcessStartInfo
                 {
                     WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
                     FileName = "java",
-                    Arguments = "-jar ark-tools.jar wild Extinction.ark output"
+                    Arguments = arktoolsArguments.ToString()
                 };
             arktools.StartInfo = startInfo;
             arktools.Start();
@@ -115,18 +133,18 @@ namespace ArkIntel
 
         private int DownloadNewData()
         {
-            if (File.Exists("Extinction.ark"))
+            if (File.Exists(SavefileName))
             {
-                File.Delete("Extinction.ark");
+                File.Delete(SavefileName);
             }
             try
             {
                 SessionOptions sessionOptions = new SessionOptions
                 {
                     Protocol = Protocol.Ftp,
-                    HostName = "167.114.211.228",
-                    UserName = "ark-ftp",
-                    Password = "8era1c0y"
+                    HostName = ServerHostName,
+                    UserName = ServerUserName,
+                    Password = ServerPassword
                 };
 
                 using (Session session = new Session())
@@ -137,7 +155,7 @@ namespace ArkIntel
 
                     try
                     {
-                        session.GetFiles("/ShooterGame/Saved/SavedArks/Extinction.ark", "Extinction.ark").Check();
+                        session.GetFiles($"/ShooterGame/Saved/SavedArks/{SavefileName}", SavefileName).Check();
                     }
                     catch (Exception)
                     {
@@ -172,6 +190,9 @@ namespace ArkIntel
             {
                 string fileCategorized;
 
+                if (file.Name == "classes.json")
+                    continue;
+
                 // Remove extra filename clutter
                 var fileCleaned = file.Name.Substring(0, file.Name.IndexOf("_C", StringComparison.Ordinal));
 
@@ -188,7 +209,7 @@ namespace ArkIntel
                 }
                 else if (file.Name.Contains("Rare"))
                 {
-                    // corrupted - from extinction
+                    // rare spawns - from 'Rare Sightings' mod
                     fileCategorized = fileCleaned + " (Rare)";
                 }
                 else
@@ -284,6 +305,7 @@ namespace ArkIntel
     {
         public double lat { get; set; }
         public double lon { get; set; }
+        public double z { get; set; }
     }
     public class DinoStats
     {
@@ -291,5 +313,6 @@ namespace ArkIntel
         public bool? female { get; set; }
         public Location location { get; set; }
         public WildLevels wildLevels { get; set; }
+        public string name { get; set; }
     }
 }
