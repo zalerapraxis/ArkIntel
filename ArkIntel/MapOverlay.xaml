@@ -5,14 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArkIntel"
         mc:Ignorable="d"
-        Title="Map Overlay" Height="630" Width="600" ResizeMode="NoResize" Closed="Window_Closed">
+        Title="Map Overlay" Height="481.124" Width="460" ResizeMode="NoResize" Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="1" Grid.ZIndex="1" Source="volcano_map.jpg"/>
-        <Canvas x:Name="canvasDinoPositions" Grid.Row="1" Grid.ZIndex="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="500" Height="500"/>
-        <Canvas x:Name="canvasDinoPositionsHighlighted" Grid.Row="1" Grid.ZIndex="3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="500" Height="500"/>
+        <Image Grid.Row="1" Grid.ZIndex="1" Source="extinction-map.jpg"/>
+        <Canvas x:Name="canvasDinoPositions" Grid.ZIndex="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="454" Height="452"/>
+        <Canvas x:Name="canvasDinoPositionsHighlighted" Grid.ZIndex="3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="454" Height="452"/>
+
+        <TextBox x:Name="txtScale" HorizontalAlignment="Left" Height="23" Grid.ZIndex="4" Margin="359,422,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="40" Text="1.0"/>
+        <Button x:Name="btnChangeScale" Content="Scale" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Grid.ZIndex="5" Margin="399,422,0,0" Click="btnChangeScale_Click"/>
     </Grid>
 </Window>

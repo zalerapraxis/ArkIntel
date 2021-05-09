@@ -5,20 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArkIntel"
         mc:Ignorable="d"
-        Title="Ark Intel" Height="343.998" Width="590" ResizeMode="NoResize">
+        Title="Ark Intel" Height="400" Width="650" ResizeMode="NoResize">
     <Window.Resources>
         <local:LevelToBrushConverter x:Key="LevelToBrushConverter"/>
-        <Image x:Key="volcano_map" Source="./volcano_map.jpg"/>
+        <Image x:Key="extinction_map" Source="./extinction-map.jpg"/>
     </Window.Resources>
 
     <Grid>
         <Button x:Name="btnRefreshData" Content="Refresh Data" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" Click="btnRefreshData_Click" Grid.ColumnSpan="2"/>
-        <Button x:Name="btnShowMap" Content="Show Map" HorizontalAlignment="Left" Margin="499,282,0,0" VerticalAlignment="Top" Width="75" Click="btnShowMap_Click" IsEnabled="False"/>
-        <Label x:Name="lbStatus" Content="Status info" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,280,0,0" Height="27" Width="350"/>
+        <Button x:Name="btnShowMap" Content="Show Map" HorizontalAlignment="Left" Margin="559,337,0,0" VerticalAlignment="Top" Width="75" Click="btnShowMap_Click" IsEnabled="False"/>
+        <Label x:Name="lbStatus" Content="Status info" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,334,0,0" Height="27" Width="350"/>
         <Label x:Name="lbSelectedDinoCount" Content="Selected count:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="135,8,0,0"/>
         <Label x:Name="lbTotalDinoCount" Content="Total Dinos:" HorizontalAlignment="Left" Margin="254,8,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.451,0.385"/>
-        <ListBox x:Name="lstDinos" HorizontalAlignment="Left" Height="233" VerticalAlignment="Top" Width="169" Margin="10,42,0,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="lstDinos_SelectionChanged" Grid.ColumnSpan="2" />
-        <DataGrid x:Name="dgDinoData" HorizontalAlignment="Left" Height="233" Margin="98,42,0,0" VerticalAlignment="Top" Width="478" IsReadOnly="True" AutoGenerateColumns="False" SelectionChanged="dgDinoData_SelectionChanged" x:FieldModifier="public" Grid.ColumnSpan="3" Grid.Column="1" AlternatingRowBackground="#FFEAEAEA" >
+        <ListBox x:Name="lstDinos" HorizontalAlignment="Left" Height="287" VerticalAlignment="Top" Width="169" Margin="10,42,0,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="lstDinos_SelectionChanged" />
+        <DataGrid x:Name="dgDinoData" HorizontalAlignment="Left" Height="287" Margin="179,42,0,0" VerticalAlignment="Top" Width="447" IsReadOnly="True" AutoGenerateColumns="False" SelectionChanged="dgDinoData_SelectionChanged" x:FieldModifier="public" AlternatingRowBackground="#FFEAEAEA" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Level" Binding="{Binding baseLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.CellStyle>
@@ -32,8 +32,8 @@
                 <DataGridTextColumn Header="Weight" Binding="{Binding wildLevels.weight}" />
                 <DataGridTextColumn Header="Melee" Binding="{Binding wildLevels.melee}" />
                 <DataGridTextColumn Header="Speed" Binding="{Binding wildLevels.speed}" />
-                <DataGridTextColumn Header="Latitude" Binding="{Binding lat}" />
-                <DataGridTextColumn Header="Longitude" Binding="{Binding lon}" />
+                <DataGridTextColumn Header="Latitude" Binding="{Binding location.lat}" />
+                <DataGridTextColumn Header="Longitude" Binding="{Binding location.lon}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

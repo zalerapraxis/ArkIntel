@@ -13,9 +13,12 @@ namespace ArkIntel
     /// </summary>
     public partial class MapOverlay
     {
+        private double coordScale = 4.4;
+
         public MapOverlay()
         {
             InitializeComponent();
+            txtScale.Text = coordScale.ToString();
             MainWindow.LstDinosSelectionChanged += MainWindow_lstDinosSelectionChanged;
             MainWindow.DgDinoDataSelectionChanged += MainWindow_dgDinoDataSelectionChanged;
             DrawDinoLocations();
@@ -31,7 +34,7 @@ namespace ArkIntel
             var i = 0;
             while (i < index)
             {
-                DrawShape(10, ScaleCoordsToMap(dinoData[i].lon), ScaleCoordsToMap(dinoData[i].lat), Colors.Black, ConvertLevelToColor(dinoData[i].baseLevel), ConvertLevelToZIndex(dinoData[i].baseLevel));
+                DrawShape(10, ScaleCoordsToMap(dinoData[i].location.lon), ScaleCoordsToMap(dinoData[i].location.lat), Colors.Black, ConvertLevelToColor(dinoData[i].baseLevel), ConvertLevelToZIndex(dinoData[i].baseLevel));
                 i++;
             }
         }
@@ -75,7 +78,7 @@ namespace ArkIntel
 
         public double ScaleCoordsToMap(double coord)
         {
-            return coord * 5.8;
+            return coord * coordScale;
         }
 
         public Color ConvertLevelToColor(int baseLevel)
@@ -138,7 +141,7 @@ namespace ArkIntel
                 Width = dotSize,
                 RenderTransformOrigin = new Point(0.5, 0.5),
                 Fill = new SolidColorBrush(Colors.White),
-                Margin = new Thickness(ScaleCoordsToMap(dinoData[i].lon), ScaleCoordsToMap(dinoData[i].lat), 0, 0)
+                Margin = new Thickness(ScaleCoordsToMap(dinoData[i].location.lon), ScaleCoordsToMap(dinoData[i].location.lat), 0, 0)
             };
             // Sets the position.
             canvasDinoPositionsHighlighted.Children.Add(currentDot);
@@ -155,6 +158,12 @@ namespace ArkIntel
             };
             trans.BeginAnimation(ScaleTransform.ScaleXProperty, animation);
             trans.BeginAnimation(ScaleTransform.ScaleYProperty, animation);
+        }
+
+        private void btnChangeScale_Click(object sender, RoutedEventArgs e)
+        {
+            coordScale = double.Parse(txtScale.Text);
+            DrawDinoLocations();
         }
     }
 }

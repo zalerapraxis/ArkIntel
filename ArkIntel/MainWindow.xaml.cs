@@ -19,13 +19,14 @@ namespace ArkIntel
         public static event EventHandler LstDinosSelectionChanged;
         public static event EventHandler DgDinoDataSelectionChanged;
         public FileInfo[] Files;
-        public static DirectoryInfo Dir = new DirectoryInfo(@"output");
+        public static DirectoryInfo Dir = new DirectoryInfo($"{Directory.GetCurrentDirectory()}\\output");
         public static List<DinoStats> GlobalDinoData;
         public static bool MapOverlayOpen;
 
         public MainWindow()
         {
             InitializeComponent();
+            var wot = Dir.FullName;
             InitializeData();
         }
 
@@ -34,7 +35,7 @@ namespace ArkIntel
             RunArkTools();
             PopulateListbox();
             CountTotalDinos();
-            lbStatus.Content = "Worldfile last saved: " + File.GetLastWriteTime("TheVolcano.ark").ToString("MM/dd HH:mm:ss");
+            lbStatus.Content = "Worldfile last saved: " + File.GetLastWriteTime("Extinction.ark").ToString("MM/dd HH:mm:ss");
         }
 
         private void lstDinos_SelectionChanged(object sender, EventArgs e)
@@ -84,7 +85,7 @@ namespace ArkIntel
 
         private void RunArkTools()
         {
-            if (!Directory.Exists($@"{Dir}"))
+            if (!Directory.Exists(Dir.FullName))
             {
                 Directory.CreateDirectory("output");
             }
@@ -100,7 +101,7 @@ namespace ArkIntel
                 {
                     WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
                     FileName = "java",
-                    Arguments = "-jar ark-tools.jar wild TheVolcano.ark output"
+                    Arguments = "-jar ark-tools.jar wild Extinction.ark output"
                 };
             arktools.StartInfo = startInfo;
             arktools.Start();
@@ -114,18 +115,18 @@ namespace ArkIntel
 
         private int DownloadNewData()
         {
-            if (File.Exists("TheVolcano.ark"))
+            if (File.Exists("Extinction.ark"))
             {
-                File.Delete("TheVolcano.ark");
+                File.Delete("Extinction.ark");
             }
             try
             {
                 SessionOptions sessionOptions = new SessionOptions
                 {
                     Protocol = Protocol.Ftp,
-                    HostName = "",
-                    UserName = "",
-                    Password = ""
+                    HostName = "167.114.211.228",
+                    UserName = "ark-ftp",
+                    Password = "8era1c0y"
                 };
 
                 using (Session session = new Session())
@@ -136,7 +137,7 @@ namespace ArkIntel
 
                     try
                     {
-                        session.GetFiles("/ShooterGame/Saved/SavedArk39950/TheVolcano.ark", "TheVolcano.ark").Check();
+                        session.GetFiles("/ShooterGame/Saved/SavedArks/Extinction.ark", "Extinction.ark").Check();
                     }
                     catch (Exception)
                     {
@@ -158,7 +159,7 @@ namespace ArkIntel
             Dispatcher.Invoke(() =>
             {
                 lbStatus.Content = $"Downloading: {e.FileName} - ({e.FileProgress:P0})";
-            });            
+            });
         }
 
         private void PopulateListbox()
@@ -172,20 +173,23 @@ namespace ArkIntel
                 string fileCategorized;
 
                 // Remove extra filename clutter
-                var fileCleaned = file.Name.Substring(0, file.Name.IndexOf("_Character", StringComparison.Ordinal));
+                var fileCleaned = file.Name.Substring(0, file.Name.IndexOf("_C", StringComparison.Ordinal));
 
                 // Categorizing any "special" dinos
                 if (file.Name.Contains("SE_"))
                 {
+                    // scorched earth
                     fileCategorized = fileCleaned.Remove(0, 3) + " (SE)";
                 }
-                else if (file.Name.Contains("Child"))
+                else if (file.Name.Contains("Corrupt"))
                 {
-                    fileCategorized = fileCleaned + " (Child)";
+                    // corrupted - from extinction
+                    fileCategorized = fileCleaned + " (Corrupt)";
                 }
-                else if (!file.Name.Contains("Core"))
+                else if (file.Name.Contains("Rare"))
                 {
-                    fileCategorized = fileCleaned + " (Base)";
+                    // corrupted - from extinction
+                    fileCategorized = fileCleaned + " (Rare)";
                 }
                 else
                 {
@@ -195,15 +199,23 @@ namespace ArkIntel
                 // Elemental dino handling
                 if (file.Name.Contains("Lightning"))
                 {
+                    // lightning
                     fileCategorized = fileCategorized + " (L)";
                 }
                 else if (file.Name.Contains("Fire"))
                 {
+                    // fire
                     fileCategorized = fileCategorized + " (F)";
                 }
                 else if (file.Name.Contains("Poison"))
                 {
+                    // poison
                     fileCategorized = fileCategorized + " (P)";
+                }
+                else if (file.Name.Contains("Ice"))
+                {
+                    // ice
+                    fileCategorized = fileCategorized + " (I)";
                 }
 
                 // Add to listbox
@@ -267,12 +279,17 @@ namespace ArkIntel
         public int melee { get; set; }
         public int speed { get; set; }
     }
-    public class DinoStats
+
+    public class Location
     {
         public double lat { get; set; }
         public double lon { get; set; }
+    }
+    public class DinoStats
+    {
         public int baseLevel { get; set; }
         public bool? female { get; set; }
+        public Location location { get; set; }
         public WildLevels wildLevels { get; set; }
     }
 }
