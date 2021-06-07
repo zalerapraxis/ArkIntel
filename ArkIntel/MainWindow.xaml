@@ -16,11 +16,8 @@
         <Button x:Name="btnShowMap" Content="Show Map" HorizontalAlignment="Left" Margin="559,337,0,0" VerticalAlignment="Top" Width="75" Click="btnShowMap_Click" IsEnabled="False"/>
 
         <Label x:Name="lbStatus" Content="Status info" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,334,0,0" Height="27" Width="350"/>
-        <Label x:Name="lbSelectedDinoCount" Content="Selected count:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="444,7,0,0"/>
-        <Label x:Name="lbTotalDinoCount" Content="Total Dinos:" HorizontalAlignment="Left" Margin="563,7,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.451,0.385"/>
-
-        <CheckBox x:Name="chkbxGetTamed" Content="Get Tamed?" HorizontalAlignment="Left" Margin="108,13,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="chkDontRedownload" Content="Don't redownload" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="195,13,0,0"/>
+        <Label x:Name="lbSelectedDinoCount" Content="Selected count:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="351,7,0,0"/>
+        <Label x:Name="lbTotalDinoCount" Content="Total Dinos:" HorizontalAlignment="Left" Margin="470,7,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.451,0.385"/>
 
         <ListBox x:Name="lstDinos" HorizontalAlignment="Left" Height="287" VerticalAlignment="Top" Width="169" Margin="10,42,0,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="lstDinos_SelectionChanged" />
         <DataGrid x:Name="dgDinoData" HorizontalAlignment="Left" Height="287" Margin="179,42,0,0" VerticalAlignment="Top" Width="485" IsReadOnly="True" AutoGenerateColumns="False" SelectionChanged="dgDinoData_SelectionChanged" x:FieldModifier="public" AlternatingRowBackground="#FFEAEAEA" >
@@ -37,10 +34,11 @@
                 <DataGridTextColumn Header="Weight" Binding="{Binding wildLevels.weight}" />
                 <DataGridTextColumn Header="Melee" Binding="{Binding wildLevels.melee}" />
                 <DataGridTextColumn Header="Speed" Binding="{Binding wildLevels.speed}" /> -->
-                <DataGridTextColumn Header="Latitude" Binding="{Binding location.lat}" />
-                <DataGridTextColumn Header="Longitude" Binding="{Binding location.lon}" />
+                <DataGridTextColumn Header="Lat (Y)" Binding="{Binding location.lat}" />
+                <DataGridTextColumn Header="Lon (X)" Binding="{Binding location.lon}" />
                 <DataGridTextColumn Header="Height" Binding="{Binding location.z}" />
                 <DataGridTextColumn Header="Name" Binding="{Binding name}" />
+                <DataGridTextColumn Header="Tamed?" Binding="{Binding tamed}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -68,12 +68,8 @@ namespace ArkIntel
 
         private async void btnRefreshData_Click(object sender, RoutedEventArgs e)
         {
-            if ((bool) !chkDontRedownload.IsChecked)
-            {
-                lbStatus.Content = "Connecting to FTP server...";
-                await Task.Run(() => DownloadNewData());
-            }
-            
+            lbStatus.Content = "Connecting to FTP server...";
+            await Task.Run(() => DownloadNewData());
             lbStatus.Content = "Save data downloaded. Running Ark-Tools...";
             InitializeData();
         }
@@ -105,21 +101,13 @@ namespace ArkIntel
                 file.Delete();
             }
 
-            StringBuilder arktoolsArguments = new StringBuilder();
-            arktoolsArguments.Append("-jar ark-tools.jar ");
-            if ((bool) chkbxGetTamed.IsChecked)
-                arktoolsArguments.Append("tamed ");
-            else
-                arktoolsArguments.Append("wild ");
-            arktoolsArguments.Append($"{SavefileName} output");
-
             System.Diagnostics.Process arktools = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo =
                 new System.Diagnostics.ProcessStartInfo
                 {
                     WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
                     FileName = "java",
-                    Arguments = arktoolsArguments.ToString()
+                    Arguments = $"-jar ark-tools.jar creatures {SavefileName} output"
                 };
             arktools.StartInfo = startInfo;
             arktools.Start();
@@ -313,6 +301,7 @@ namespace ArkIntel
         public bool? female { get; set; }
         public Location location { get; set; }
         public WildLevels wildLevels { get; set; }
+        public bool tamed { get; set; }
         public string name { get; set; }
     }
 }
